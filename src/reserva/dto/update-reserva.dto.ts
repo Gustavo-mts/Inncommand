@@ -1,4 +1,19 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateReservaDto } from './create-reserva.dto';
+import { IsDateString, IsMongoId, IsOptional } from 'class-validator';
 
-export class UpdateReservaDto extends PartialType(CreateReservaDto) {}
+export class UpdateReservaDto {
+  @IsOptional()
+  @IsMongoId()
+  readonly quartoId?: string;
+
+  @IsOptional()
+  @IsMongoId()
+  readonly userId?: string;
+
+  @IsOptional()
+  @IsDateString()
+  readonly startDate?: Date;
+
+  @IsOptional()
+  @IsDateString()
+  readonly endDate?: Date;
+}

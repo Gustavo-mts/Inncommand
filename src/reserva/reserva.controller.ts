@@ -1,54 +1,35 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
 import { ReservaService } from './reserva.service';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
+import { Reserva } from './interfaces/reserva.interface';
 
-@Controller('bookings')
+@Controller('reservas')
 export class ReservaController {
   constructor(private readonly reservaService: ReservaService) {}
 
   @Post()
-  async create(@Body() createBookingDto: CreateReservaDto) {
-    const booking = await this.reservaService.create(createBookingDto);
-    console.log(booking);
-    return booking;
+  create(@Body() createReservaDto: CreateReservaDto): Promise<Reserva> {
+    return this.reservaService.create(createReservaDto);
   }
 
   @Get()
-  async findAll() {
-    const bookings = await this.reservaService.findAll();
-    return bookings;
+  findAll(): Promise<Reserva[]> {
+    return this.reservaService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const booking = await this.reservaService.findOne(id);
-    return booking;
+  findOne(@Param('id') id: string): Promise<Reserva> {
+    return this.reservaService.findOne(id);
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateReservaDto: UpdateReservaDto,
-  ) {
-    const booking = await this.reservaService.update(id, updateReservaDto);
-    return booking;
+  update(@Param('id') id: string, @Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+    return this.reservaService.update(id, updateReservaDto);
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string) {
-    await this.reservaService.delete(id);
-    return null;
+  remove(@Param('id') id: string): Promise<Reserva> {
+    return this.reservaService.remove(id);
   }
 }
