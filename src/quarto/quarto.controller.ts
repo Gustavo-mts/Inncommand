@@ -1,53 +1,35 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
 import { QuartoService } from './quarto.service';
-import { CreateQuartoDto } from './dto/create-quarto-dto';
-import { UpdateQuartoDto } from './dto/update-quarto-dto';
+import { CreateQuartoDto } from './dto/create-quarto.dto';
+import { UpdateQuartoDto } from './dto/update-quarto.dto';
+import { Quarto } from './interfaces/quarto.interface';
 
-@Controller('quarto')
+@Controller('quartos')
 export class QuartoController {
   constructor(private readonly quartoService: QuartoService) {}
 
   @Post()
-  async create(@Body() createQuartoDto: CreateQuartoDto) {
-    const user = await this.quartoService.create(createQuartoDto);
-    return user;
+  create(@Body() createQuartoDto: CreateQuartoDto): Promise<Quarto> {
+    return this.quartoService.create(createQuartoDto);
   }
 
   @Get()
-  async findAll() {
-    const user = await this.quartoService.findAll();
-    return user;
+  findAll(): Promise<Quarto[]> {
+    return this.quartoService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const user = await this.quartoService.findOne(id);
-    return user;
+  findOne(@Param('id') id: string): Promise<Quarto> {
+    return this.quartoService.findOne(id);
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateQuartoDto: UpdateQuartoDto,
-  ) {
-    const user = await this.quartoService.update(id, updateQuartoDto);
-    return user;
+  update(@Param('id') id: string, @Body() updateQuartoDto: UpdateQuartoDto): Promise<Quarto> {
+    return this.quartoService.update(id, updateQuartoDto);
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param(':id') id: string) {
-    await this.quartoService.delete(id);
-    return null;
+  remove(@Param('id') id: string): Promise<Quarto> {
+    return this.quartoService.remove(id);
   }
 }

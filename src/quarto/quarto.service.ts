@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { Quarto } from './quarto.interface';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateQuartoDto } from './dto/create-quarto-dto';
-import { UpdateQuartoDto } from './dto/update-quarto-dto';
+import { Model } from 'mongoose';
+import { CreateQuartoDto } from './dto/create-quarto.dto';
+import { UpdateQuartoDto } from './dto/update-quarto.dto';
+import { Quarto } from './interfaces/quarto.interface';
 
 @Injectable()
 export class QuartoService {
@@ -12,37 +12,35 @@ export class QuartoService {
   ) {}
 
   async create(createQuartoDto: CreateQuartoDto): Promise<Quarto> {
-    const novoQuarto = new this.quartoModel(createQuartoDto);
-    return await novoQuarto.save();
+    // Utilizar o método create do modelo para criar uma nova instância
+    return this.quartoModel.create(createQuartoDto);
   }
 
   async findAll(): Promise<Quarto[]> {
-    return await this.quartoModel.find().exec();
+    return this.quartoModel.find();
   }
 
   async findOne(id: string): Promise<Quarto> {
-    const quarto = await this.quartoModel.findById(id).exec();
+    const quarto = await this.quartoModel.findById(id);
     if (!quarto) {
-      throw new NotFoundException(`Quarto com o ID ${id} não encontrado.`);
+      throw new NotFoundException(`Quarto with ID ${id} not found`);
     }
     return quarto;
   }
 
   async update(id: string, updateQuartoDto: UpdateQuartoDto): Promise<Quarto> {
-    const quarto = await this.quartoModel.findByIdAndUpdate(
-      id,
-      updateQuartoDto,
-    );
-    if (!quarto) {
-      throw new NotFoundException(`Quarto com ID ${id} não encontrado.`);
+    const updatedQuarto = await this.quartoModel.findByIdAndUpdate(id, updateQuartoDto, { new: true });
+    if (!updatedQuarto) {
+      throw new NotFoundException(`Quarto with ID ${id} not found`);
     }
-    return quarto;
+    return updatedQuarto;
   }
 
-  async delete(id: string): Promise<void> {
-    const result = await this.quartoModel.findByIdAndDelete(id).exec();
-    if (result === null) {
-      throw new NotFoundException(`Quarto com ID ${id} não encontrado.`);
+  async remove(id: string): Promise<Quarto> {
+    const deletedQuarto = await this.quartoModel.findByIdAndDelete(id);
+    if (!deletedQuarto) {
+      throw new NotFoundException(`Quarto with ID ${id} not found`);
     }
+    return deletedQuarto;
   }
 }

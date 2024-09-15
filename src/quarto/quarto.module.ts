@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { QuartoService } from './quarto.service';
 import { QuartoController } from './quarto.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { QuartoSchema } from './quarto.schema';
+import { QuartoSchema } from './interfaces/quarto.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Quarto', schema: QuartoSchema }]),
   ],
-  providers: [QuartoService],
   controllers: [QuartoController],
+  providers: [QuartoService],
+  exports: [QuartoService]
 })
 export class QuartoModule {}

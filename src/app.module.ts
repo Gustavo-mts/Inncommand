@@ -1,21 +1,17 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
 import { ReservaModule } from './reserva/reserva.module';
-import { UsersModule } from './users/users.module';
 import { QuartoModule } from './quarto/quarto.module';
-import { PagamentoModule } from './pagamento/pagamento.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://gustavo:tavinho1@cluster0.8dmtp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
-    ),
+    ConfigModule.forRoot(), // Habilitar variáveis de ambiente
+    MongooseModule.forRoot(process.env.DATABASE_URL), // Conexão com o banco de dados
+    UserModule,
     ReservaModule,
-    UsersModule,
     QuartoModule,
-    PagamentoModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
