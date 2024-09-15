@@ -12,6 +12,7 @@ export class CreateQuartoDto {
   readonly description?: string;
 
   @IsNumber()
+  @IsOptional()
   readonly price: number;
 
   @IsBoolean()
